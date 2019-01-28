@@ -62,8 +62,8 @@ public class CreateTextItem extends AbstractDisplay {
                 createList(context, f);
             } else if (f.isFile()) {
                 String ext = getExtension(f.getName());
-                Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
-                        android.R.drawable.ic_menu_help);
+                int bmpId = context.getResources().getIdentifier("ic_menu_help",
+                        "drawable", context.getPackageName());
                 switch (ext) {
                     case FILETYPE_TXT:
                     case FILETYPE_txt:
@@ -73,39 +73,23 @@ public class CreateTextItem extends AbstractDisplay {
                     case FILETYPE_doc:
                         Log.d(TAG, "text file add");
                         isItemAdded = true;
-                        bmp = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.icon_text);
+                        bmpId = context.getResources().getIdentifier("icon_text",
+                                "drawable", context.getPackageName());
+                        Log.d(TAG,"img = " + bmpId);
                         break;
 
                     default:
                         break;
                 }
                 if (isItemAdded) {
-                    ListItem item = new ListItem(bmp, f.getName(),
-                            f.getParent() + "/" + f.getName());
+                    ListItem item = new ListItem(bmpId, f.getName(),
+                            f.getParent() + "/" + f.getName(), ext);
                     listItems.add(item);
+                    item.setThumbnailId(bmpId);
                 }
             }
         }
         return;
-    }
-
-    /**
-     * 拡張子を取得
-     * @param fileName 拡張子を含めたファイルの名前
-     * @return 拡張子
-     */
-    private String getExtension(String fileName) {
-        if (fileName == null) {
-            return "default";
-        }
-        // "."の位置を取得します。
-        int lastDotPosition = fileName.lastIndexOf(".");
-        // 存在する場合は、"."以降を返します。
-        if (lastDotPosition != -1) {
-            return fileName.substring(lastDotPosition + 1);
-        }
-        return "default";
     }
 
     /**

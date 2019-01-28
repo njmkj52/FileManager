@@ -2,6 +2,7 @@ package c.sra.filemanager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,8 @@ public class ListAdapter extends ArrayAdapter<ListItem> {
 
         // サムネイル画像を設定
         ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
-        if (item.getThumbnail() != null) {
-            thumbnail.setImageBitmap(item.getThumbnail());
+        if (item.getThumbnailId() != 0) {
+            thumbnail.setImageResource(item.getThumbnailId());
         }
 
         // タイトルを設定

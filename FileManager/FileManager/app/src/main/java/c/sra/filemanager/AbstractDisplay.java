@@ -19,4 +19,22 @@ public abstract class AbstractDisplay{
     public void clear(Context context) {
         clearList(context);
     }
+
+    /**
+     * 拡張子を取得
+     * @param fileName 拡張子を含めたファイルの名前
+     * @return 拡張子
+     */
+    protected String getExtension(String fileName) {
+        if (fileName == null) {
+            return "default";
+        }
+        // "."の位置を取得します。
+        int lastDotPosition = fileName.lastIndexOf(".");
+        // 存在する場合は、"."以降を返します。
+        if (lastDotPosition != -1) {
+            return fileName.substring(lastDotPosition + 1);
+        }
+        return "default";
+    }
 }

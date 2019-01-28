@@ -52,7 +52,7 @@ public class SetListView {
                 item.setHistory();
                 String title = item.getTitle();
                 String path = item.getPath();
-                String ext = getExtension(title);
+                String ext = item.getExt();
                 if (ext != null){
                     switch (ext) {
                         case FILETYPE_MP3:
@@ -117,24 +117,6 @@ public class SetListView {
         bis.close();
         String fs = new String(data, "Shift-JIS");
         return fs;
-    }
-
-    /**
-     * 拡張子を取得
-     * @param fileName 拡張子を含めたファイルの名前
-     * @return 拡張子
-     */
-    private String getExtension(String fileName) {
-        if (fileName == null) {
-            return null;
-        }
-        // "."の位置を取得します。
-        int lastDotPosition = fileName.lastIndexOf(".");
-        // 存在する場合は、"."以降を返します。
-        if (lastDotPosition != -1) {
-            return fileName.substring(lastDotPosition + 1);
-        }
-        return null;
     }
 
 }

@@ -3,9 +3,10 @@ package c.sra.filemanager;
 import android.graphics.Bitmap;
 
 public class ListItem {
-    private Bitmap mThumbnail = null;
+    private int mThumbnailId = 0;
     private String mTitle = null;
     private String mPath = null;
+    private String mExt = null;
     private Boolean isPushed = false;
 
     /**
@@ -15,22 +16,24 @@ public class ListItem {
 
     /**
      * コンストラクタ
-     * @param thumbnail サムネイル画像
+     * @param thumid サムネイル画像
      * @param title タイトル
      */
-    public ListItem(Bitmap thumbnail, String title, String path) {
-        mThumbnail = thumbnail;
+    public ListItem(int thumid, String title, String path, String ext) {
+        mThumbnailId = thumid;
         mTitle = title;
         mPath = path;
+        mExt = ext;
         isPushed = false;
     }
 
     /**
-     * サムネイル画像を設定
-     * @param thumbnail サムネイル画像
+     * サムネイル画像のIDを設定
+     * @param thumid
+     * @return サムネイル画像のID
      */
-    public void setThumbnail(Bitmap thumbnail) {
-        mThumbnail = thumbnail;
+    public void setThumbnailId(int thumid) {
+        mThumbnailId = thumid;
     }
 
     /**
@@ -50,6 +53,14 @@ public class ListItem {
     }
 
     /**
+     * 拡張子を設定
+     * @param ext 拡張子
+     */
+    public void setmExt(String ext) {
+        mExt = ext;
+    }
+
+    /**
      * 履歴の設定
      */
     public void setHistory() {
@@ -57,11 +68,11 @@ public class ListItem {
     }
 
     /**
-     * サムネイル画像を取得
-     * @return サムネイル画像
+     * サムネイル画像のIDを取得
+     * @return サムネイル画像のID
      */
-    public Bitmap getThumbnail() {
-        return mThumbnail;
+    public int getThumbnailId() {
+        return mThumbnailId;
     }
 
     /**
@@ -78,6 +89,14 @@ public class ListItem {
      */
     public String getPath() {
         return mPath;
+    }
+
+    /**
+     * 拡張子を取得
+     * @return 拡張子
+     */
+    public String getExt() {
+        return mExt;
     }
 
     /**
