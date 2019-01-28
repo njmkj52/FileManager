@@ -1,6 +1,7 @@
 package c.sra.filemanager;
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.IBinder;
@@ -13,9 +14,9 @@ import java.io.IOException;
 public class AudioPlayerService extends Service{
     private MediaPlayer mediaPlayer;
     boolean isPlayback;
-    String fileName;
-    String TAG = "FileManager";
-
+    private String filePath;
+    private String beforeFilePath;
+    private String TAG = "FileManager";
 
     @Override
     public void onCreate() {
@@ -28,14 +29,16 @@ public class AudioPlayerService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.d(TAG, "AudioPlayerService: onStartCommand()");
+        filePath = intent.getStringExtra("KEY");
 
-        fileName = intent.getStringExtra("KEY");
-        isPlayback = intent.getBooleanExtra("BOOL", false);
-
-        if (isPlayback) {
+        if (isPlayback && filePath.equals(beforeFilePath)) {
             audioStop();
         } else {
+            if (isPlayback) {
+                audioStop();
+            }
             audioPlay();
+            beforeFilePath = filePath;
         }
         return START_REDELIVER_INTENT; // 再起動する
     }
@@ -63,48 +66,18 @@ public class AudioPlayerService extends Service{
         return null;
     }
 
-
-    private boolean audioSetup(){
-        boolean fileCheck = false;
-
-        // インタンスを生成
-        mediaPlayer = new MediaPlayer();
-
-        //音楽ファイル名, あるいはパス
-        String filePath = Environment.getExternalStorageDirectory()
-                + "/Music/" + fileName;
-        Log.d(TAG, "AudioPlayerService: " + filePath);
-
-        // assetsから mp3 ファイルを読み込み
-        try{
-            // MediaPlayerに読み込んだ音楽ファイルを指定
-            mediaPlayer.setDataSource(filePath);
-            //setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            mediaPlayer.prepare();
-            fileCheck = true;
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        return fileCheck;
-    }
-
     private void audioPlay() {
 
-        if (mediaPlayer == null) {
-            // audio ファイルを読出し
-            if (!audioSetup()){
-                Toast.makeText(getApplication(), "Error: read audio file", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        else{
-            // 繰り返し再生する場合
-            mediaPlayer.stop();
-            isPlayback = false;
-            mediaPlayer.reset();
-            // リソースの解放
-            mediaPlayer.release();
+        Boolean fileCheck = false;
+        mediaPlayer = new MediaPlayer();
+
+        Log.d(TAG, "AudioPlayerService: " + filePath);
+
+        // mediaPlayerにファイルをセット
+        fileCheck = audioFileSetup(filePath);
+        if (!fileCheck){
+            Toast.makeText(getApplication(), "Error: read audio file", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         // 再生する
@@ -132,4 +105,19 @@ public class AudioPlayerService extends Service{
 
         mediaPlayer = null;
     }
+
+    private boolean audioFileSetup(String filePath){
+        boolean fileCheck = false;
+        try{
+            // MediaPlayerに読み込んだ音楽ファイルを指定
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+            fileCheck = true;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        return fileCheck;
+    }
+
 }

@@ -17,16 +17,25 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     final String TAG = "FileManager";
     final static int REQUEST_PERMISSION = 1002;
 
-    File file = Environment.getExternalStorageDirectory();
-    String storagePath = file.getPath();
+    ArrayList<ListItem> listItem;
     ListView listView;
+
+    private void setList() {
+        AbstractDisplay dai = new CreateAudioItem(listView);
+        AbstractDisplay dti = new CreateTextItem(listView);
+        listItem = dai.display(this);
+        listItem.addAll(dti.display(this));
+
+        SetListView slv = new SetListView(listItem, listView);
+        slv.setListener(this);
+        slv.addListView(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +51,11 @@ public class MainActivity extends AppCompatActivity {
                         "ファイルのアクセス許可がありません。", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
-
-                AbstractDisplay ld = new ListDisplay(storagePath, listView);
-                ld.display(this);
+                setList();
             }
         }else {
-            Log.d(TAG, "call ld.display()");
-
-            AbstractDisplay ld = new ListDisplay(storagePath, listView);
-            ld.display(this);
+            Log.d(TAG, "call dai.display()");
+            setList();
         }
     }
 
@@ -62,10 +67,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_PERMISSION) {
             // 使用が許可された
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                                Log.d(TAG, "call ld.display()");
-
-                AbstractDisplay ld = new ListDisplay(storagePath, listView);
-                ld.display(this);
+                                Log.d(TAG, "call dai.display()");
+                setList();
             } else {
                 // それでも拒否された時の対応
                 Toast toast = Toast.makeText(this,
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    // オプションメニューの作成
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //main.xmlの内容を読み込む
@@ -83,20 +88,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // オプションメニューの処理を追加
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-
-                AbstractDisplay ld = new ListDisplay(storagePath, listView);
-                ld.clear(this);
-                ld.display(this);
+                setList();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    // パーミッションの確認
+    // パーミッションの確認ｃ
     boolean checkPermission(){
         // 既に許可している
         if (ActivityCompat.checkSelfPermission(this,
@@ -125,10 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         } else {
-
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSION);
             return false;
         }
     }

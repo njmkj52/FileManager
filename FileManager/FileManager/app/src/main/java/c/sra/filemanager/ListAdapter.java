@@ -1,6 +1,7 @@
 package c.sra.filemanager;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ public class ListAdapter extends ArrayAdapter<ListItem> {
     private int mResource;
     private List<ListItem> mItems;
     private LayoutInflater mInflater;
+    public boolean isPushed = false;
 
     /**
      * コンストラクタ
@@ -36,8 +38,7 @@ public class ListAdapter extends ArrayAdapter<ListItem> {
 
         if (convertView != null) {
             view = convertView;
-        }
-        else {
+        } else {
             view = mInflater.inflate(mResource, null);
         }
 
@@ -46,15 +47,28 @@ public class ListAdapter extends ArrayAdapter<ListItem> {
 
         // サムネイル画像を設定
         ImageView thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
-        thumbnail.setImageBitmap(item.getThumbnail());
+        if (item.getThumbnail() != null) {
+            thumbnail.setImageBitmap(item.getThumbnail());
+        }
 
         // タイトルを設定
         TextView title = (TextView)view.findViewById(R.id.title);
-        title.setText(item.getTitle());
+        if (item.getTitle() != null) {
+            title.setText(item.getTitle());
+        }
 
         // パスを設定
         TextView path = (TextView)view.findViewById(R.id.path);
-        path.setText(item.getPath());
+        if (item.getPath() != null) {
+            path.setText(item.getPath());
+        }
+
+        // 背景色を変更
+        if (item.isHistory()) {
+            view.setBackgroundColor(Color.rgb(200, 200, 200));
+        } else {
+            view.setBackgroundColor(Color.rgb(255,255,255));
+        }
 
         return view;
     }

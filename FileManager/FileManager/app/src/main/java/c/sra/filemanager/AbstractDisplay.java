@@ -2,17 +2,21 @@ package c.sra.filemanager;
 
 import android.content.Context;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public abstract class AbstractDisplay{
-    public abstract void makeList(final Context context);
-    public abstract void makeListener(final Context context);
-    public abstract void clearList(final Context context);
+    final String TAG = "FileManager";
 
+    protected abstract ArrayList<ListItem> makeListItem(final Context context);
+    protected abstract void clearList(final Context context);
 
-    public final void display(Context context) {
-        makeList(context);
-        makeListener(context);
+    public ArrayList<ListItem> display(Context context) {
+        ArrayList<ListItem> listItems = makeListItem(context);
+        return listItems;
     }
-    public final void clear(Context context) {
+
+    public void clear(Context context) {
         clearList(context);
     }
 }

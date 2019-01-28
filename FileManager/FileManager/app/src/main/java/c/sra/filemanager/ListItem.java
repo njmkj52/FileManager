@@ -6,6 +6,7 @@ public class ListItem {
     private Bitmap mThumbnail = null;
     private String mTitle = null;
     private String mPath = null;
+    private Boolean isPushed = false;
 
     /**
      * 空のコンストラクタ
@@ -21,6 +22,7 @@ public class ListItem {
         mThumbnail = thumbnail;
         mTitle = title;
         mPath = path;
+        isPushed = false;
     }
 
     /**
@@ -48,6 +50,13 @@ public class ListItem {
     }
 
     /**
+     * 履歴の設定
+     */
+    public void setHistory() {
+        isPushed = true;
+    }
+
+    /**
      * サムネイル画像を取得
      * @return サムネイル画像
      */
@@ -70,4 +79,14 @@ public class ListItem {
     public String getPath() {
         return mPath;
     }
+
+    /**
+     * 履歴
+     * @return 履歴
+     */
+    public Boolean isHistory() {
+        return isPushed;
+    }
+
+
 }
